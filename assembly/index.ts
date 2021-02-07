@@ -33,6 +33,27 @@ export function calcSinLookup(): Float64Array {
   return result;
 }
 
+const sourceCount = 2000000;
+const source = new Float64Array(sourceCount);
+
+for (let i = 0; i < sourceCount; ++i){
+  source[i] = i % 1000 + 1 / (i + 1);
+}
+
+export function averageIfLess(upper: f64): f64{
+  let sum: f64 = 0;
+  let count = 0;
+  for (let i = 0; i < sourceCount; ++i){
+    const e = unchecked(source[i]);
+    if (e < upper){
+      sum += e;
+      ++count; 
+    }
+  }
+
+  return count == 0 ? 0 : (sum / count);
+}
+
 
 declare namespace test {
   @external("test", "importCallback")

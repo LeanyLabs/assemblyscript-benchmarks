@@ -54,7 +54,13 @@ function factorialTest() {
 
 function squareArrayTest() {
   function squareArrayJs(arr) {
-    return arr.map((x) => x * x);
+    const len = arr.length;
+    const result = new Int32Array(len);
+    for (let i = 0; i < len; ++i) {
+      const e = arr[i];
+      result[i] = e * e;
+    }
+    return result;
   }
   const squareArrayAs = wasm.squareArrayWrap;
 
@@ -129,8 +135,48 @@ function importTest() {
   runSuite(test);
 }
 
+function averageIfLessTest() {
+  const sourceCount = 2000000;
+  const source = new Float64Array(sourceCount);
+
+  for (let i = 0; i < sourceCount; ++i) {
+    source[i] = (i % 1000) + 1 / (i + 1);
+  }
+
+  function averageIfLessJs(upper) {
+    let sum = 0;
+    let count = 0;
+    for (let i = 0; i < sourceCount; ++i) {
+      const e = source[i];
+      if (e < upper) {
+        sum += e;
+        ++count;
+      }
+    }
+
+    return count == 0 ? 0 : sum / count;
+  }
+
+  const averageIfLessAs = wasm.averageIfLess;
+  const testNum = 800;
+
+  const test = new Benchmark.Suite("averageIfLess");
+
+  // console.log(averageIfLessAs(testNum), averageIfLessJs(testNum));
+
+  test
+    .add("AssemblyScript", function () {
+      averageIfLessAs(testNum);
+    })
+    .add("JavaScript", function () {
+      averageIfLessJs(testNum);
+    });
+  runSuite(test);
+}
+
 addTest();
 factorialTest();
 squareArrayTest();
 calcSinLookupTest();
 importTest();
+averageIfLessTest();
