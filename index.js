@@ -19,7 +19,7 @@ const wasmModule = loader.instantiateSync(
 function squareArrayWrap(array) {
   const {
     __newArray,
-    __getArray,
+    __getInt32Array,
 
     Int32Array_ID,
     squareArray,
@@ -27,21 +27,18 @@ function squareArrayWrap(array) {
 
   const arr = __newArray(Int32Array_ID, array);
 
-  const result = __getArray(squareArray(arr));
+  const result = __getInt32Array(squareArray(arr));
 
   return result;
 }
 
 function calcSinLookupWrap() {
   const {
-    __getArray,
+    __getFloat64Array,
 
     calcSinLookup,
   } = wasmModule.exports;
-
-  const result = __getArray(calcSinLookup());
-
-  return result;
+  return __getFloat64Array(calcSinLookup());
 }
 
 module.exports = {

@@ -34,8 +34,7 @@ function addTest() {
 
 function factorialTest() {
   function factorialJs(i) {
-    if (i == 0) return 1;
-    return i * factorialJs(i - 1);
+    return i == 0 ? 1 : i * factorialJs(i - 1);
   }
   const factorialAs = wasm.factorial;
 
@@ -61,8 +60,7 @@ function squareArrayTest() {
 
   const test = new Benchmark.Suite("squareArray");
 
-  const array = new Array(200);
-  array.fill(2);
+  const array = new Int32Array(200).fill(2);
 
   // console.log(squareArrayAs(array));
 
@@ -79,7 +77,7 @@ function squareArrayTest() {
 function calcSinLookupTest() {
   function calcSinLookupJs() {
     const max = 6283;
-    const result = new Array(max);
+    const result = new Float64Array(max);
 
     for (let i = 0; i < max; ++i) {
       result[i] = Math.sin(i * 0.001);
